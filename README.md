@@ -206,13 +206,13 @@ Google Colab is the recommended environment.
 Clone the repository:
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY.git
+git clone https://github.com/Ameer262/automl-intrusion-detection-evaluation.git
 ```
 
 Enter the repository directory:
 
 ```bash
-cd YOUR-REPOSITORY
+cd automl-intrusion-detection-evaluation
 ```
 
 Create a virtual environment:
