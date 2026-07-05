@@ -36,7 +36,39 @@ Official dataset source:
 
 https://www.unb.ca/cic/datasets/ids-2017.html
 
-The dataset is not included in this repository because of its size. It must be downloaded separately and placed in the location expected by the notebook.
+The dataset is not included in this repository because of its size. It must be downloaded separately.
+
+Detailed dataset-preparation instructions are provided in:
+
+```text
+data/README.md
+```
+
+The repository supports two dataset-preparation options:
+
+1. place the prepared source sample at:
+
+```text
+data/raw/cic_0.01km.csv
+```
+
+2. or place the raw CICIDS2017 CSV files under:
+
+```text
+data/raw/cicids2017/
+```
+
+Then run:
+
+```bash
+python src/prepare_dataset.py
+```
+
+The script creates the processed dataset at:
+
+```text
+data/processed/cicids2017_prepared_sample.csv
+```
 
 ---
 
@@ -49,10 +81,22 @@ The dataset is not included in this repository because of its size. It must be d
   Final written report summarizing the methodology, results, critical evaluation, and conclusions.
 
 - `requirements.txt`  
-  Main Python dependencies required to run the notebook.
+  Main Python dependencies required to run the notebook and scripts.
 
 - `README.md`  
   Project description, dataset information, and execution instructions.
+
+- `data/README.md`  
+  Dataset download, placement, preparation, and troubleshooting instructions.
+
+- `src/config.py`  
+  Central configuration file containing paths, constants, selected features, model parameters, and the frozen threshold.
+
+- `src/prepare_dataset.py`  
+  Script for validating or constructing the prepared CICIDS2017 sample.
+
+- `src/run_pipeline.py`  
+  Compact runnable script that reproduces the main corrected pipeline outside the notebook.
 
 ---
 
@@ -193,7 +237,7 @@ The alternative thresholds were analyzed only descriptively. The official thresh
 
 ### Option 1: Google Colab
 
-Google Colab is the recommended environment.
+Google Colab is the recommended environment for running the full notebook.
 
 1. Open `intrusion_detection_project.ipynb` in Google Colab.
 2. Upload or mount the required dataset.
@@ -201,7 +245,13 @@ Google Colab is the recommended environment.
 4. Install the required packages when prompted.
 5. Run the notebook cells in order from top to bottom.
 
-### Option 2: Local Jupyter Environment
+The notebook contains the full analysis, plots, tables, model comparison, final evaluation, and detailed error analysis.
+
+---
+
+### Option 2: Reproduce the Main Pipeline Outside the Notebook
+
+A compact runnable version of the main corrected pipeline is provided in the `src/` folder.
 
 Clone the repository:
 
@@ -239,7 +289,34 @@ Install the required dependencies:
 pip install -r requirements.txt
 ```
 
-Start Jupyter Notebook:
+Prepare the dataset:
+
+```bash
+python src/prepare_dataset.py
+```
+
+Run the compact corrected pipeline:
+
+```bash
+python src/run_pipeline.py
+```
+
+The compact pipeline will:
+
+1. load the prepared CICIDS2017 sample;
+2. create group-aware training, validation, and test splits;
+3. train the final LightGBM model;
+4. apply the frozen threshold of `0.546`;
+5. print the final metrics;
+6. save metrics and confusion counts under the `outputs/` folder.
+
+This script is intentionally shorter than the notebook. It is provided to make the core experiment reproducible outside Colab. The full discussion, figures, and detailed error analysis remain in the notebook.
+
+---
+
+### Option 3: Local Jupyter Notebook
+
+After installing the requirements, start Jupyter Notebook:
 
 ```bash
 jupyter notebook
@@ -255,9 +332,45 @@ Run all notebook cells in order.
 
 ---
 
+## Expected Local Structure After Dataset Setup
+
+After preparing the dataset, the local project should look like this:
+
+```text
+automl-intrusion-detection-evaluation/
+│
+├── README.md
+├── requirements.txt
+├── final_project_report.pdf
+├── intrusion_detection_project.ipynb
+│
+├── data/
+│   ├── README.md
+│   ├── raw/
+│   │   ├── cic_0.01km.csv
+│   │   └── cicids2017/
+│   └── processed/
+│       └── cicids2017_prepared_sample.csv
+│
+├── src/
+│   ├── config.py
+│   ├── prepare_dataset.py
+│   └── run_pipeline.py
+│
+└── outputs/
+    ├── final_metrics.csv
+    └── final_confusion_matrix.csv
+```
+
+The raw and processed dataset files are not committed to the repository by default.
+
+---
+
 ## Important Reproducibility Notes
 
 - The dataset is not included in this repository.
+- Dataset setup is documented in `data/README.md`.
+- The compact reproducible scripts are provided under `src/`.
 - Fixed random seeds are used where appropriate.
 - Some numerical results may vary slightly because of package versions, operating systems, hardware, and internal library behavior.
 - The original source used older versions of several Python libraries.
@@ -299,8 +412,10 @@ The project demonstrates that trustworthy cybersecurity machine learning require
 
 ## Author
 
-**Name:** Ameer Rohana
-**Student ID:** 215631375
-**Course:** Data Science in Cyber  
-**Institution:** University of Haifa  
-**Year:** 2026
+| Field | Information |
+|---|---|
+| Name | Ameer Rohana |
+| Student ID | 215631375 |
+| Course | Data Science in Cyber |
+| Institution | University of Haifa |
+| Year | 2026 |
